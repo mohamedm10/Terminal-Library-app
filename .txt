@@ -1,0 +1,25 @@
+Terminal Library project
+testing mvc and db(sqlite) concepts
+
+files structure
+
+controller.py
+views.py
+models.py (class for User, Book)
+library.db
+
+Users table
+id int PM
+name varchar NOTNULL
+contact details INT NOTNULL
+fees INT 
+type varcahr NOT NULL
+
+
+Books table
+id int PM
+name varchar NOTNULL 
+author varchar NOTNULL
+publication company varcahr NOT NULL 
+rented date date NOTNULL
+rented user INT (foreign key)
