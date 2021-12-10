@@ -2,7 +2,7 @@ import sqlite3
 from sqlite3 import Error
 import random
 
-###### DB CREATION
+###### DB CREATION & CONNECTION FUNC
 def connect_db():
 
     con = sqlite3.connect('library.db')
