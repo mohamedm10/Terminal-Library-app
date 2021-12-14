@@ -16,7 +16,7 @@ def create_tables():
     try:
         # cur.execute('DROP TABLE IF EXISTS users')
         # cur.execute('DROP TABLE IF EXISTS books')
-        cur.execute('''CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL, user_type TEXT NOT NULL, fine INTEGER);''')
+        cur.execute('''CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT NOT NULL UNIQUE, email TEXT NOT NULL, user_type TEXT NOT NULL, fine INTEGER);''')
         cur.execute('''CREATE TABLE IF NOT EXISTS books (id INTEGER PRIMARY KEY, name TEXT NOT NULL, author TEXT NOT NULL, publication_company TEXT, rented_date TEXT, rented_user_id INTEGER, FOREIGN KEY(rented_user_id) REFERENCES users(id));''')
     except Error as e:
         print(e)
@@ -92,6 +92,14 @@ class User:
         conn.commit()
         return 
 
+    # edit user details
+    @classmethod
+    def edit_user(cls,conn,user_id,new_name,new_email):
+        cur = conn.cursor()
+        cur.execute(''' UPDATE users SET name = ?, email = ? WHERE id = ?''',(new_name,new_email,user_id))
+        conn.commit()
+        return 
+
 ##############################################################################################
 class Book:
     def __init__(self,name,author,pub_company,id=None,rented_date=None,rented_user_id=None):
@@ -141,21 +149,33 @@ class Book:
         cur.execute('''SELECT * FROM books WHERE rented_user_id IS NULL''')
         result = cur.fetchall()
         books = [book[1] for book in result]
-        print('available books: ',books)
+        print("available books' name: ",books)
         return 
+
+    # edit book details
+    @classmethod
+    def edit_book(cls,conn,book_id, new_name, new_author, new_pub_company):
+        cur = conn.cursor()
+        cur.execute(''' UPDATE books SET name = ?, author = ?, publication_company = ? WHERE id = ?''',(new_name, new_author, new_pub_company,book_id))
+        conn.commit()
+        return 
+
 
 # when renting a book   # pass an input from user to the get_book method on the controller
 # this a normal function, supposed to be on controller
 def rent_book():
-    book=Book.get_book(input('please input book name: '))
-    rented_user=User.get_user(input('name of user: '))
-    conn = connect_db()
-    cur = conn.cursor()
-    cur.execute('''UPDATE books SET rented_date = datetime('now','localtime'), rented_user_id = ? WHERE id = ? ''',(rented_user.id,book.id))
-    conn.commit()
-    cur.execute('SELECT * FROM books WHERE id = ?',(book.id,))
-    row = cur.fetchone()
-    return row
+    book=Book.get_book(input('please input book name without "": '))
+    try:
+        rented_user=User.get_user(input('name of user: '))
+        conn = connect_db()
+        cur = conn.cursor()
+        cur.execute('''UPDATE books SET rented_date = datetime('now','localtime'), rented_user_id = ? WHERE id = ? ''',(rented_user.id,book.id))
+        conn.commit()
+        cur.execute('SELECT * FROM books WHERE id = ?',(book.id,))
+        row = cur.fetchone()
+        return row
+    except:
+        print('User does not exist')
 
 # when a book is bieng returned
 def return_book():

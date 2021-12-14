@@ -38,7 +38,7 @@ def user_menu(name='mohamed'):
     options = """
     please select an option.
     1. view books
-    2. show fine
+    2. update details
     3. logout
     """
     print(options)
@@ -52,7 +52,8 @@ def librarian_menu(name='librarian'):
     1. lend a book
     2. book returns
     3. calculate fines
-    4. register a new book 
+    4. register a new book
+    5. update book details 
     """
     print(options)
     choice = input('>>> ')
@@ -79,6 +80,21 @@ def redirection():
     print ('You will be redirected to the main menu, please select 2/3')
     return
 
+def edit_user(logged_in_user):
+    selected_user = logged_in_user
+    print(f'enter new details for user {selected_user}: ')
+    new_name = input('name: ')
+    new_email = input('email: ')
+    return selected_user, new_name, new_email
+
+def edit_book():
+    print('please select book to edit.')
+    selected_book = input('book name: ').strip()
+    print('enter new details: ')
+    new_name = input('name: ')
+    new_author = input('author: ')
+    new_pub_company = input('publication compnay: ')
+    return selected_book, new_name, new_author, new_pub_company
 
 # FUNCTIONS
 #######################################

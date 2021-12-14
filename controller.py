@@ -1,12 +1,14 @@
 # this is where the whole app is going to be connected sending stuff to db and back, calling display funcs and input funcs, giving logic to the app.
 
 # imports
-from views import book_registration, failed_login, librarian_menu, login_details, menu_1, redirection, success_registration, user_menu, register, book_fine
+from app import connect_db
+from views import book_registration, failed_login, librarian_menu, login_details, menu_1, redirection, success_registration, user_menu, register, book_fine, edit_book, edit_user
 from models import User, Book, create_tables, rent_book,return_book
 import time
 
 # creates & connects the DB and creates tables
 create_tables()
+conn = connect_db()
  
 user_input = None             
 while True:     # keep looping 
@@ -27,8 +29,14 @@ while True:     # keep looping
                         # list all books that the user has borrowed
                         pass
                     elif choice == '2':
-                        # show the user how much fine he has on his account
-                        pass
+                        # update user details
+                        # take an input of name and email
+                        selected_user, new_name, new_email = edit_user(user.name)
+                        # get the user
+                        user = User.get_user(selected_user)
+                        # execute a model class method for updating the details
+                        User.edit_user(conn,user.id, new_name, new_email)  
+                        
                     elif choice == '3':
                         # go to main menu
                         pass
@@ -56,6 +64,14 @@ while True:     # keep looping
                     elif lib_choice == '4': # for regsitering a new book
                         name,author,pub_company = book_registration()
                         Book.new_book(name,author,pub_company)
+                    elif lib_choice == '5':
+                        pass
+                        # update book details author, publication company
+                        selected_book, new_name, new_author, new_pub_company = edit_book()
+                        # get book
+                        book = Book.get_book(selected_book)
+                        # update book record
+                        Book.edit_book(conn,book.id,new_name, new_author, new_pub_company)
 
         # if user is not in database               
         else:
