@@ -1,9 +1,7 @@
-# this is where the whole app is going to be connected sending stuff to db and back, calling display funcs and input funcs, giving logic to the app.
 
 # imports
-from app import connect_db
-from views import book_registration, failed_login, librarian_menu, login_details, menu_1, redirection, success_registration, user_menu, register, book_fine, edit_book, edit_user
-from models import User, Book, create_tables, rent_book,return_book
+from views import book_registration, delete_book_message, delete_book_prompt, delete_user_message, delete_user_prompt, failed_login, librarian_menu, login_details, menu_1, redirection, success_registration, user_menu, register, book_fine, edit_book, edit_user
+from models import User, Book, create_tables, rent_book,return_book, connect_db
 import time
 
 # creates & connects the DB and creates tables
@@ -40,7 +38,16 @@ while True:     # keep looping
                     elif choice == '3':
                         # go to main menu
                         pass
-                    
+                    elif choice == '4':
+                        # logged in user to delete his account
+                        selection = delete_user_prompt(user.name)
+                        if selection == 'y':
+                            User.delete_user(conn,user.email)
+                            delete_user_message()
+                            break
+                        else:
+                            pass
+
                 # LIBRARIAN menu
             elif user.user_type == 'librarian':
                 lib_choice = ''
@@ -52,7 +59,6 @@ while True:     # keep looping
                     elif lib_choice == '2': # when a user returns book
                         return_book(conn)
                     elif lib_choice == '3': # calculate fines
-                        pass
                         # get all the books which are borrowed
                         books = Book.getall_books(conn)
                         # for each book get the rented_user_id, rented_date
@@ -65,14 +71,20 @@ while True:     # keep looping
                         name,author,pub_company = book_registration()
                         Book.new_book(conn,name,author,pub_company)
                     elif lib_choice == '5':
-                        pass
                         # update book details author, publication company
                         selected_book, new_name, new_author, new_pub_company = edit_book()
                         # get book
                         book = Book.get_book(conn,selected_book)
                         # update book record
                         Book.edit_book(conn,book.id,new_name, new_author, new_pub_company)
-
+                    elif lib_choice == '6':
+                        # list all books that can be removed
+                        Book.available_books(conn)
+                        # delete a book from system
+                        selected_book = delete_book_prompt()
+                        Book.delete_book(conn,selected_book)
+                        delete_book_message()
+                        
         # if user is not in database               
         else:
             ans = ''

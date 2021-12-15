@@ -1,10 +1,7 @@
-# to practise how to query sqlite DB using OOP
-# 1. creating a new user
-# 2. querying a user by his name and getting back all his sql attributes and saving them to the python object attributes.
-# 3. when renting a book a person says a book name and then you search if the book is not already rented then if not rented then you update the date he took and his name.
 
 import sqlite3
 from sqlite3 import Error
+from views import delete_book_message
 
 def connect_db():
     conn = sqlite3.connect('library.db')
@@ -95,6 +92,14 @@ class User:
         conn.commit()
         return 
 
+    # delete a user 
+    def delete_user(conn,user_email):
+        cur = conn.cursor()    
+        cur.execute("DELETE FROM users WHERE email = ?",(user_email,))
+        conn.commit()
+        return 
+
+##############################################################################################
 ##############################################################################################
 class Book:
     def __init__(self,name,author,pub_company,id=None,rented_date=None,rented_user_id=None):
@@ -126,7 +131,6 @@ class Book:
         return book
 
     # method to get all the books that have been borrowed
-    # select * from books where rented_user_id IS NOT NULL;
     @classmethod
     def getall_books(cls,conn):
         cur = conn.cursor()
@@ -140,7 +144,7 @@ class Book:
         cur.execute('''SELECT * FROM books WHERE rented_user_id IS NULL''')
         result = cur.fetchall()
         books = [book[1] for book in result]
-        print("available books' name: ",books)
+        print("available books' names: ",books)
         return 
 
     # edit book details
@@ -151,6 +155,15 @@ class Book:
         conn.commit()
         return 
 
+    # delete book which is not borrowed
+    def delete_book(conn,book_name):
+        cur = conn.cursor()    
+        try:
+            cur.execute("DELETE FROM books WHERE name = ? AND rented_user_id IS NULL",(book_name,))
+            conn.commit()
+            return
+        except:
+            print('No match found')
 
 # when renting a book   # pass an input from user to the get_book method on the controller
 # this a normal function, supposed to be on controller

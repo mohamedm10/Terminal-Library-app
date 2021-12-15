@@ -1,8 +1,3 @@
-# user interaction with the system
-
-# when program starts ask user for choice between loggin in, register
-## after he is logged in for normal users show: his fine, and the books he has, and time on each book
-## for librarian show options: rent a book, book return, search for user who have had books for long time
 
 import datetime
 import re
@@ -40,6 +35,7 @@ def user_menu(name='mohamed'):
     1. view books
     2. update details
     3. logout
+    4. delete account
     """
     print(options)
     choice = input('>>> ')
@@ -53,7 +49,8 @@ def librarian_menu(name='librarian'):
     2. book returns
     3. calculate fines
     4. register a new book
-    5. update book details 
+    5. update book details
+    6. delete book 
     """
     print(options)
     choice = input('>>> ')
@@ -95,6 +92,24 @@ def edit_book():
     new_author = input('author: ')
     new_pub_company = input('publication compnay: ')
     return selected_book, new_name, new_author, new_pub_company
+
+def delete_user_prompt(user):
+    print(f'please confirm you want to delete {user} from the system?')
+    choice = input('y/n ').lower()
+    return choice
+
+def delete_book_prompt():
+    print('enter the correct name of the book you would like to remove..')
+    choice = input('name? ').strip()
+    return choice
+
+def delete_user_message():
+    message = print('your user has been succesfully deleted, please register to login...')
+    return message
+
+def delete_book_message(book_name):
+    message = print(f'book {book_name} has been succesfully deleted..')
+    return message
 
 # FUNCTIONS
 #######################################
