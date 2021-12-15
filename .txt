@@ -23,3 +23,15 @@ author varchar NOTNULL
 publication company varcahr NOT NULL 
 rented date date NOTNULL
 rented user INT (foreign key)
+
+CASES
+system
+a-user registration (user/librarian)
+b-adding new books (librarian)
+c-lending books (librarian)
+d-handling book returns (librarian)
+e-calculating fines (system)
+f-all books reports (system)
+g-cheking if new user exists  in system (system)
+
+
