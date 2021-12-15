@@ -17,7 +17,7 @@ while True:     # keep looping
     if user_input=='1':
         email = login_details()
         # gets back user object if user in database
-        user = User.user_login(email)
+        user = User.user_login(conn,email)
         # print(user)
         if user:
             # USER menu
@@ -33,7 +33,7 @@ while True:     # keep looping
                         # take an input of name and email
                         selected_user, new_name, new_email = edit_user(user.name)
                         # get the user
-                        user = User.get_user(selected_user)
+                        user = User.get_user(conn,selected_user)
                         # execute a model class method for updating the details
                         User.edit_user(conn,user.id, new_name, new_email)  
                         
@@ -47,29 +47,29 @@ while True:     # keep looping
                 while lib_choice !='b':
                     lib_choice = librarian_menu(user.name)
                     if lib_choice == '1': # when you are lending a book
-                        Book.available_books()
+                        Book.available_books(conn)
                         rent_book()
                     elif lib_choice == '2': # when a user returns book
-                        return_book()
+                        return_book(conn)
                     elif lib_choice == '3': # calculate fines
                         pass
                         # get all the books which are borrowed
-                        books = Book.getall_books()
+                        books = Book.getall_books(conn)
                         # for each book get the rented_user_id, rented_date
                         for date,user_id in books: 
-                            User.add_fine(user_id,fine=book_fine(date))
+                            User.add_fine(conn,user_id,fine=book_fine(date))
                         # call the book_fine(rented_date) to get fine 
                         # add fine to the user by calling User.add_fine(fine=book_fine(),rented_user_id)
                         
                     elif lib_choice == '4': # for regsitering a new book
                         name,author,pub_company = book_registration()
-                        Book.new_book(name,author,pub_company)
+                        Book.new_book(conn,name,author,pub_company)
                     elif lib_choice == '5':
                         pass
                         # update book details author, publication company
                         selected_book, new_name, new_author, new_pub_company = edit_book()
                         # get book
-                        book = Book.get_book(selected_book)
+                        book = Book.get_book(conn,selected_book)
                         # update book record
                         Book.edit_book(conn,book.id,new_name, new_author, new_pub_company)
 
@@ -88,13 +88,13 @@ while True:     # keep looping
 # create a normal user
     elif user_input=='2':
         name,email = register()
-        User.create_user(name,email)
+        User.create_user(conn,name,email)
         success_registration()
 
 # create a librarian user
     elif user_input =='3':
         name,email = register()
-        User.create_librarian(name,email)
+        User.create_librarian(conn,name,email)
         success_registration()
         
 # terminate program
