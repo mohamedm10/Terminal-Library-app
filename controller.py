@@ -55,7 +55,7 @@ while True:     # keep looping
                     lib_choice = librarian_menu(user.name)
                     if lib_choice == '1': # when you are lending a book
                         Book.available_books(conn)
-                        rent_book()
+                        rent_book(conn)
                     elif lib_choice == '2': # when a user returns book
                         return_book(conn)
                     elif lib_choice == '3': # calculate fines

@@ -168,9 +168,9 @@ class Book:
 # when renting a book   # pass an input from user to the get_book method on the controller
 # this a normal function, supposed to be on controller
 def rent_book(conn):
-    book=Book.get_book(input('please input book name without "": '))
+    book=Book.get_book(conn,input('please input book name without "": '))
     try:
-        rented_user=User.get_user(input('name of user: '))
+        rented_user=User.get_user(conn,input('name of user: '))
         cur = conn.cursor()
         cur.execute('''UPDATE books SET rented_date = datetime('now','localtime'), rented_user_id = ? WHERE id = ? ''',(rented_user.id,book.id))
         conn.commit()
