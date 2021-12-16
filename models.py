@@ -182,7 +182,7 @@ def rent_book(conn):
 
 # when a book is bieng returned
 def return_book(conn):
-    book=Book.get_book(input('please input book name: '))
+    book=Book.get_book(conn,input('please input book name: '))
     cur = conn.cursor()
     cur.execute('''UPDATE books SET rented_date = ?, rented_user_id = ? WHERE id = ? ''',(None,None,book.id))
     conn.commit()
